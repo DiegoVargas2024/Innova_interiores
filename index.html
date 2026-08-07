@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="public/images/logo/logo.webp" type="image/webp">
+    <title>Innova Interiores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeInUp 0.4s ease-out forwards;
+            opacity: 0; 
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        
+        @keyframes slideLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-slide {
+            display: inline-block;
+            white-space: nowrap;
+            animation: slideLeft 20s linear infinite;
+        }
+
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const Icon = ({ path, className = "w-6 h-6", fill = "none" }) => (
+            <svg viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{ __html: path }} />
+        );
+        const MessageCircle = ({ className }) => <Icon className={className} path='<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' />;
+        const MapPin = ({ className }) => <Icon className={className} path='<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>' />;
+        const Phone = ({ className }) => <Icon className={className} path='<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>' />;
+        const Facebook = ({ className }) => <Icon className={className} path='<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>' />;
+        const ZoomIn = ({ className }) => <Icon className={className} path='<circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/>' />;
+        const X = ({ className }) => <Icon className={className} path='<path d="M18 6 6 18"/><path d="m6 6 12 12"/>' />;
+        const ChevronRight = ({ className }) => <Icon className={className} path='<path d="m9 18 6-6-6-6"/>' />;
+        const CheckCircle2 = ({ className }) => <Icon className={className} path='<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>' />;
+        const Menu = ({ className }) => <Icon className={className} path='<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>' />;
+        const Clock = ({ className }) => <Icon className={className} path='<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' />;
+
+        const innovaPhone = "525511288342";
+
+        const heroImages = [
+            "public/images/carrucel/carrucel_1.webp",
+            "public/images/carrucel/carrucel_2.webp",
+            "public/images/carrucel/carrucel_3.webp",
+            "public/images/carrucel/carrucel_4.webp",
+            "public/images/carrucel/carrucel_5.webp"
+        ];
+
+        const products = [
+          {
+            id: 1,
+            name: "Lambrín Clásico",
+            price: "$130",
+            description: "Caja con 10 piezas (abarca 4 m²). Medidas: 16cm x 2.50m.",
+            variants: [
+              { name: "Negro", thumbUrl: "public/images/lambrin_clasico/lambrin_negro.webp", imageUrl: "public/images/lambrin_clasico/lambrin_negro.webp" },
+              { name: "Chocolate", thumbUrl: "public/images/lambrin_clasico/lambrin_chocolate.webp", imageUrl: "public/images/lambrin_clasico/lambrin_chocolate.webp" },
+              { name: "Arena", thumbUrl: "public/images/lambrin_clasico/lambrin_arena.webp", imageUrl: "public/images/lambrin_clasico/lambrin_arena.webp" },
+              { name: "Beige", thumbUrl: "public/images/lambrin_clasico/lambrin_beige.webp", imageUrl: "public/images/lambrin_clasico/lambrin_beige.webp" },
+              { name: "Blanco", thumbUrl: "public/images/lambrin_clasico/lambrin_blanco.webp", imageUrl: "public/images/lambrin_clasico/lambrin_blanco.webp" },
+              { name: "Azul", thumbUrl: "public/images/lambrin_clasico/lambrin_azul.webp", imageUrl: "public/images/lambrin_clasico/lambrin_azul.webp" },
+              { name: "Rosa", thumbUrl: "public/images/lambrin_clasico/lambrin_rosa.webp", imageUrl: "public/images/lambrin_clasico/lambrin_rosa.webp" },
+              { name: "Rosa Pastel", thumbUrl: "public/images/lambrin_clasico/lambrin_rosa_pastel.webp", imageUrl: "public/images/lambrin_clasico/lambrin_rosa_pastel.webp" },
+              { name: "Verde", thumbUrl: "public/images/lambrin_clasico/lambrin_verde.webp", imageUrl: "public/images/lambrin_clasico/lambrin_verde.webp" },
+              { name: "Gris Claro", thumbUrl: "public/images/lambrin_clasico/lambrin_gris_claro.webp", imageUrl: "public/images/lambrin_clasico/lambrin_gris_claro.webp" },
+              { name: "Gris Oxford", thumbUrl: "public/images/lambrin_clasico/lambrin_gris_oxford.webp", imageUrl: "public/images/lambrin_clasico/lambrin_gris_oxford.webp" },
+              { name: "Nogal Oscuro", thumbUrl: "public/images/lambrin_clasico/lambrin_nogal_oscuro.webp", imageUrl: "public/images/lambrin_clasico/lambrin_nogal_oscuro.webp" },
+              { name: "Nogal Claro", thumbUrl: "public/images/lambrin_clasico/lambrin_nogal_claro.webp", imageUrl: "public/images/lambrin_clasico/lambrin_nogal_claro.webp" },
+              { name: "Negro Jaspeado", thumbUrl: "public/images/lambrin_clasico/lambrin_negro_jaspeado.webp", imageUrl: "public/images/lambrin_clasico/lambrin_negro_jaspeado.webp" }
+            ]
+          },
+          {
+            id: 2,
+            name: "Lambrín Especial",
+            price: "$140",
+            description: "Caja 10 pzs (abarca 4 m²). Acabados premium (16cm, 19cm o 15cm x 2.50m).",
+            variants: [
+              { name: "Negro Dorado", thumbUrl: "public/images/lambrin_especial/negro_dorado.webp", imageUrl: "public/images/lambrin_especial/negro_dorado.webp" },
+              { name: "Negro Nogal", thumbUrl: "public/images/lambrin_especial/negro_nogal.webp", imageUrl: "public/images/lambrin_especial/negro_nogal.webp" },
+              { name: "Negro Plata", thumbUrl: "public/images/lambrin_especial/negro_plata.webp", imageUrl: "public/images/lambrin_especial/negro_plata.webp" },
+              { name: "Blanco Mármol", thumbUrl: "public/images/lambrin_especial/blanco_marmol.webp", imageUrl: "public/images/lambrin_especial/blanco_marmol.webp" },
+              { name: "Gris Mármol", thumbUrl: "public/images/lambrin_especial/gris_marmol.webp", imageUrl: "public/images/lambrin_especial/gris_marmol.webp" },
+              { name: "Gold", thumbUrl: "public/images/lambrin_especial/gold.webp", imageUrl: "public/images/lambrin_especial/gold.webp" },
+              { name: "Blanco Glitter", thumbUrl: "public/images/lambrin_especial/blanco_glitter.webp", imageUrl: "public/images/lambrin_especial/blanco_glitter.webp" },
+              { name: "Negro Glitter", thumbUrl: "public/images/lambrin_especial/negro_glitter.webp", imageUrl: "public/images/lambrin_especial/negro_glitter.webp" }
+            ]
+          },
+          {
+            id: 15,
+            name: "Lambrín Exterior",
+            price: "$400",
+            description: "Resistente a la intemperie. Cada caja abarca 4 m². Medidas: 22 cm x 2.50 m.",
+            variants: [
+              { name: "Terracota", thumbUrl: "public/images/lambrin_exterior/exterior_terracota.webp", imageUrl: "public/images/lambrin_exterior/exterior_terracota.webp" },
+              { name: "Negro", thumbUrl: "public/images/lambrin_exterior/exterior_negro.webp", imageUrl: "public/images/lambrin_exterior/exterior_negro.webp" },
+              { name: "Café", thumbUrl: "public/images/lambrin_exterior/exterior_cafe.webp", imageUrl: "public/images/lambrin_exterior/exterior_cafe.webp" }
+            ]
+          },
+          {
+            id: 16,
+            name: "Tira Luz LED para Lambrín",
+            price: "$220 por metro",
+            description: "Flexible y resistente, ideal para empotrar en lambrines. Conector: $20.",
+            variants: [
+              { name: "Luz Cálida", thumbUrl: "public/images/tira_led/tira_led_lambrin.webp", imageUrl: "public/images/tira_led/tira_led_lambrin.webp" }
+            ]
+          },
+          {
+            id: 3,
+            name: "Placas tipo mármol",
+            price: "$700",
+            description: "Medidas: 1.22 x 2.44m. Espesor: 3mm.",
+            variants: [
+              { name: "Black Aqua", thumbUrl: "public/images/placas_tipo_marmol/placa_black_aqua.webp", imageUrl: "public/images/placas_tipo_marmol/placa_black_aqua.webp" },
+              { name: "Silver Quartz", thumbUrl: "public/images/placas_tipo_marmol/placa_silver_quartz.webp", imageUrl: "public/images/placas_tipo_marmol/placa_silver_quartz.webp" },
+              { name: "Vaticano", thumbUrl: "public/images/placas_tipo_marmol/placa_vaticano.webp", imageUrl: "public/images/placas_tipo_marmol/placa_vaticano.webp" },
+              { name: "Dakota", thumbUrl: "public/images/placas_tipo_marmol/placa_dakota.webp", imageUrl: "public/images/placas_tipo_marmol/placa_dakota.webp" },
+              { name: "Quartz Rose", thumbUrl: "public/images/placas_tipo_marmol/placa_quartz_rose.webp", imageUrl: "public/images/placas_tipo_marmol/placa_quartz_rose.webp" },
+              { name: "Mónaco", thumbUrl: "public/images/placas_tipo_marmol/placa_monaco.webp", imageUrl: "public/images/placas_tipo_marmol/placa_monaco.webp" },
+              { name: "Lisboa", thumbUrl: "public/images/placas_tipo_marmol/placa_lisboa.webp", imageUrl: "public/images/placas_tipo_marmol/placa_lisboa.webp" },
+              { name: "Cairo", thumbUrl: "public/images/placas_tipo_marmol/placa_cairo.webp", imageUrl: "public/images/placas_tipo_marmol/placa_cairo.webp" },
+              { name: "North", thumbUrl: "public/images/placas_tipo_marmol/placa_north.webp", imageUrl: "public/images/placas_tipo_marmol/placa_north.webp" },
+              { name: "Aqua", thumbUrl: "public/images/placas_tipo_marmol/placa_aqua.webp", imageUrl: "public/images/placas_tipo_marmol/placa_aqua.webp" }
+            ]
+          },
+          {
+            id: 4,
+            name: "Lámparas Decorativas Circulares",
+            price: "$180",
+            description: "Lámparas de diseño circular para complementar tu espacio.",
+            variantLabel: "Luz",
+            variants: [
+              { name: "Blanca", thumbUrl: "public/images/lamparas_decorativas/lampara_redonda_blanca.webp", imageUrl: "public/images/lamparas_decorativas/lampara_redonda_blanca.webp" },
+              { name: "Cálida", thumbUrl: "public/images/lamparas_decorativas/lampara_redonda_calida.webp", imageUrl: "public/images/lamparas_decorativas/lampara_redonda_calida.webp" }
+            ]
+          },
+          {
+            id: 17,
+            name: "Lámpara Lineal",
+            price: "$150",
+            description: "Lámparas de diseño alargado. Medidas: 1.50m x 2cm.",
+            variantLabel: "Tipo de Luz",
+            variants: [
+              { name: "Luz Cálida", thumbUrl: "public/images/luz_lineal/lineal_calida.webp", imageUrl: "public/images/luz_lineal/lineal_calida.webp" },
+              { name: "Luz Blanca", thumbUrl: "public/images/luz_lineal/lineal_blanca.webp", imageUrl: "public/images/luz_lineal/lineal_blanca.webp" }
+            ]
+          },
+          {
+            id: 5,
+            name: "Viguetas Decorativas",
+            description: "Ideales para falsos plafones y divisiones visuales.",
+            sizeLabel: "Tamaño",
+            sizes: [
+              { name: "5cm", price: "$130" },
+              { name: "10cm", price: "$230" },
+              { name: "15cm", price: "$280" }
+            ],
+            variantLabel: "Color",
+            variants: [
+              { 
+                name: "Nogal", 
+                thumbUrls: ["public/images/viguetas_decorativas/nogal_5x5.webp", "public/images/viguetas_decorativas/nogal_5x10.webp", "public/images/viguetas_decorativas/nogal_5x15.webp"],
+                imageUrls: ["public/images/viguetas_decorativas/nogal_5x5.webp", "public/images/viguetas_decorativas/nogal_5x10.webp", "public/images/viguetas_decorativas/nogal_5x15.webp"]
+              },
+              { 
+                name: "Negro", 
+                thumbUrls: ["public/images/viguetas_decorativas/negro_5x5.webp", "public/images/viguetas_decorativas/negro_5x10.webp", "public/images/viguetas_decorativas/negro_5x15.webp"],
+                imageUrls: ["public/images/viguetas_decorativas/negro_5x5.webp", "public/images/viguetas_decorativas/negro_5x10.webp", "public/images/viguetas_decorativas/negro_5x15.webp"]
+              },
+              { 
+                name: "Beige", 
+                thumbUrls: ["public/images/viguetas_decorativas/beige_5x5.webp", "public/images/viguetas_decorativas/beige_5x10.webp", "public/images/viguetas_decorativas/beige_5x15.webp"],
+                imageUrls: ["public/images/viguetas_decorativas/beige_5x5.webp", "public/images/viguetas_decorativas/beige_5x10.webp", "public/images/viguetas_decorativas/beige_5x15.webp"]
+              }
+            ]
+          },
+          {
+            id: 6,
+            name: "Plafón para Techo",
+            price: "$1,300 por caja",
+            description: "Caja con 10 pzs (abarca 7.25 m²). Medidas: 25cm x 2.90m. Espesor: 3 mm. ($130 por pieza).",
+            variants: [
+              { name: "Nogal", thumbUrl: "public/images/plafon_para_techo/plafon_nogal.webp", imageUrl: "public/images/plafon_para_techo/plafon_nogal.webp" },
+              { name: "Chocolate", thumbUrl: "public/images/plafon_para_techo/plafon_chocolate.webp", imageUrl: "public/images/plafon_para_techo/plafon_chocolate.webp" }
+            ]
+          },
+          {
+            id: 7,
+            name: "Piso SPC Vinyl Flooring",
+            price: "$1000",
+            description: "Caja 8 pzs (2.22 m2). Medidas: 1223x153x5mm (Grosor 5+1mm). Resistente al agua.",
+            variants: [
+              { name: "Nogal", thumbUrl: "public/images/piso/nogal.webp", imageUrl: "public/images/piso/nogal.webp" },
+              { name: "Beige", thumbUrl: "public/images/piso/beige.webp", imageUrl: "public/images/piso/beige.webp" }
+            ]
+          },
+          {
+            id: 8,
+            name: "Grifos Lavamanos/Cocina",
+            price: "$350",
+            description: "Kitchen Faucet & Single Hole Faucet. Acero inoxidable brillante.",
+            variants: [
+              { name: "Lavamanos", thumbUrl: "public/images/grifos/lavamanos.webp", imageUrl: "public/images/grifos/lavamanos.webp" },
+              { name: "Cocina", thumbUrl: "public/images/grifos/cocina.webp", imageUrl: "public/images/grifos/cocina.webp" }
+            ]
+          },
+          {
+            id: 10,
+            name: "Macetas de Cerámica",
+            price: "$150",
+            description: "Complementa tu remodelación con toques naturales. Colores variados.",
+            variants: [
+              { name: "Blanca", thumbUrl: "public/images/macetas/maceta_blanca.webp", imageUrl: "public/images/macetas/maceta_blanca.webp" },
+              { name: "Mármol Azul", thumbUrl: "public/images/macetas/maceta_marmol_azul.webp", imageUrl: "public/images/macetas/maceta_marmol_azul.webp" },
+              { name: "Azul", thumbUrl: "public/images/macetas/maceta_azul.webp", imageUrl: "public/images/macetas/maceta_azul.webp" },
+              { name: "Verde Oliva", thumbUrl: "public/images/macetas/maceta_verde_oliva.webp", imageUrl: "public/images/macetas/maceta_verde_oliva.webp" },
+              { name: "Azul Celeste", thumbUrl: "public/images/macetas/maceta_azul_celeste.webp", imageUrl: "public/images/macetas/maceta_azul_celeste.webp" },
+              { name: "Verde Esmeralda", thumbUrl: "public/images/macetas/maceta_verde_esmeralda.webp", imageUrl: "public/images/macetas/maceta_verde_esmeralda.webp" }
+            ]
+          },
+          {
+            id: 12,
+            name: "Pegamento Multiusos",
+            price: "$100",
+            description: "Adhesivo especial para Lambrín y Placas. Secado rápido. Cont: 300ml.",
+            imageUrl: "public/images/pegamento/pegamento.webp"
+          },
+          {
+            id: 13,
+            name: "Policarbonato",
+            price: "Desde $2000",
+            description: "Láminas de policarbonato de alta resistencia. Medidas: 1.22m x 2.44m. Espesor: 5 mm.",
+            variants: [
+              { name: "Transparente", price: "$2000", thumbUrl: "public/images/policarbonato/transparente.webp", imageUrl: "public/images/policarbonato/transparente.webp" },
+              { name: "Filtrasol", price: "$2200", thumbUrl: "public/images/policarbonato/filtrasol.webp", imageUrl: "public/images/policarbonato/filtrasol.webp" }
+            ]
+          }
+        ];
+
+        const adicionales = [
+          {
+            id: 101,
+            name: "Grapas para Lambrín",
+            price: "$5 pza / $300 ciento",
+            description: "Clips de fijación para una instalación rápida y oculta.",
+            imageUrl: "public/images/grapas/grapas.webp"
+          },
+          {
+            id: 11,
+            name: "Molduras Cromadas",
+            price: "$100",
+            description: "Ideal para la perfecta unión de placas. Medidas: 2cm x 2.50m.",
+            variants: [
+              { name: "Humo", thumbUrl: "public/images/molduras/moldura_humo.webp", imageUrl: "public/images/molduras/moldura_humo.webp" },
+              { name: "Cobre", thumbUrl: "public/images/molduras/moldura_cobre.webp", imageUrl: "public/images/molduras/moldura_cobre.webp" },
+              { name: "Dorada", thumbUrl: "public/images/molduras/moldura_dorada.webp", imageUrl: "public/images/molduras/moldura_dorada.webp" },
+              { name: "Plata", thumbUrl: "public/images/molduras/moldura_plata.webp", imageUrl: "public/images/molduras/moldura_plata.webp" }
+            ]
+          },
+          {
+            id: 14,
+            name: "Uniones de Placa",
+            price: "$100 por pieza",
+            description: "Perfiles de unión e intermedios solo para placas.",
+            imageUrl: "public/images/uniones_placa/uniones_placa.webp"
+          },
+          {
+            id: 102,
+            name: "Mecanismo para vigueta 5x5",
+            price: "$50",
+            description: "Mecanismo con tornillo nivelador para instalación de viguetas de 5x5.",
+            imageUrl: "public/images/mecanismo_nivelador/mecanismo_nivelador.webp"
+          },
+          {
+            id: 103,
+            name: "Mecanismo para vigueta 10x5",
+            price: "$70",
+            description: "Mecanismo de plástico fijo para instalación de viguetas de 10x5.",
+            imageUrl: "public/images/mecanismo_fijo/mecanismo_fijo.webp"
+          },
+          {
+            id: 104,
+            name: "Esquineros",
+            price: "$100 la pieza",
+            description: "Varios colores disponibles. Medidas: 2.50m x 2.5cm de cada lado.",
+            imageUrl: "public/images/esquinero/esquinero.webp"
+          }
+        ];
+
+        const sucursalesList = [
+          { name: "Ecatepec", tel: "55 1128 8342", address: "C. 41 11, Villa de Gpe Xal, 55339\nEcatepec de Morelos, Méx.", schedule: "Lunes a Sábado de 9:00 am a 6:00 pm", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
+          { name: "Ciudad Azteca", tel: "Pendiente", address: "Dirección pendiente...", schedule: "Próximamente", img: "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
+          { name: "Actopan", tel: "56 5500 4231", address: "Cam. a La Estancia 26, Canadá Chica, 42603\nActopan, Hgo.", schedule: "Lunes a Viernes:\n9:00 AM - 2:00 PM y 3:00 PM - 5:00 PM\nSábados: 9:00 AM - 2:00 PM", img: "https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
+          { name: "Puebla", tel: "220 469 8849", address: "Av Independencia #24 int B\nSan Juan Tuxco, Texmelucan, Puebla", schedule: "Próximamente", img: "https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
+          { name: "Tijuana", tel: "663 109 4894", address: "Tijuana B.C.", schedule: "Lunes a Sábado de 9:00 am a 6:00 pm", img: "public/images/sucursales/tijuana.jpg" }
+        ];
+
+        function App() {
+          const [currentRoute, setCurrentRoute] = useState('home');
+          const [selectedVariants, setSelectedVariants] = useState({});
+          const [selectedSizes, setSelectedSizes] = useState({}); 
+          const [lightboxData, setLightboxData] = useState(null);
+          const [scrolled, setScrolled] = useState(false);
+          const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+          const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+          
+          const [activeSucursal, setActiveSucursal] = useState(0);
+
+          const navigateTo = (route, sectionId = null) => {
+            setCurrentRoute(route);
+            setIsMobileMenuOpen(false);
+            
+            if (sectionId) {
+              setTimeout(() => {
+                const normalizedId = sectionId.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const element = document.getElementById(normalizedId);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                  let count = 0;
+                  const scrollCheck = setInterval(() => {
+                    checkAnimations();
+                    count++;
+                    if (count > 15) clearInterval(scrollCheck);
+                  }, 100);
+                }
+              }, 10);
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          };
+
+          const checkAnimations = () => {
+            const elements = document.querySelectorAll('.scroll-anim');
+            elements.forEach(el => {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 1.1) {
+                el.classList.add('animate-fade-in');
+                el.classList.remove('opacity-0');
+              }
+            });
+          };
+
+          useEffect(() => {
+            const handleScroll = () => {
+              setScrolled(window.scrollY > 50);
+              checkAnimations();
+            };
+            window.addEventListener('scroll', handleScroll);
+            setTimeout(checkAnimations, 100);
+            return () => window.removeEventListener('scroll', handleScroll);
+          }, [currentRoute]); 
+
+          useEffect(() => {
+            if (currentRoute === 'home') {
+              const interval = setInterval(() => {
+                setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+              }, 5000);
+              return () => clearInterval(interval);
+            }
+          }, [currentRoute]);
+
+          const handleVariantSelect = (productId, variantIndex) => setSelectedVariants(prev => ({ ...prev, [productId]: variantIndex }));
+          const handleSizeSelect = (productId, sizeIndex) => setSelectedSizes(prev => ({ ...prev, [productId]: sizeIndex }));
+          const openLightbox = (product, variantIndex, sizeIndex) => setLightboxData({ product, variantIndex, sizeIndex });
+          const closeLightbox = () => setLightboxData(null);
+
+          const getActivePrice = (product, variantIdx = 0, sizeIdx = 0) => {
+            if (product.sizes && product.sizes[sizeIdx]?.price) return product.sizes[sizeIdx].price;
+            if (product.variants && product.variants[variantIdx]?.price) return product.variants[variantIdx].price;
+            return product.price || "";
+          };
+
+          const createWhatsAppLink = (product, variantIndex, sizeIndex) => {
+            let productName = product?.name || "sus productos";
+            let details = [];
+            if (product?.sizes && sizeIndex !== undefined) details.push(`${product.sizeLabel || "Tamaño"}: ${product.sizes[sizeIndex].name}`);
+            if (product?.variants && variantIndex !== undefined) details.push(`${product.variantLabel || "Modelo"}: ${product.variants[variantIndex].name}`);
+            if (details.length > 0) productName += ` (${details.join(', ')})`;
+            const message = `Hola Innova Interiores, me interesa solicitar una cotización o información sobre: ${productName}.`;
+            return `https://wa.me/${innovaPhone}?text=${encodeURIComponent(message)}`;
+          };
+
+          const renderProductVisual = (product, isSelectedVariantIndex, isSelectedSizeIndex) => {
+            const variant = product.variants ? product.variants[isSelectedVariantIndex || 0] : null;
+            let activeImageUrl = variant?.imageUrl || product.imageUrl;
+            if (variant?.imageUrls && variant.imageUrls.length > 0) {
+              activeImageUrl = variant.imageUrls[isSelectedSizeIndex || 0] || activeImageUrl;
+            }
+            
+            return (
+              <div 
+                className="w-full h-full flex items-center justify-center p-6 text-center transition-all duration-500 relative group cursor-pointer overflow-hidden bg-white"
+                onClick={() => openLightbox(product, isSelectedVariantIndex || 0, isSelectedSizeIndex || 0)}
+              >
+                {activeImageUrl ? (
+                  <img src={activeImageUrl} alt={variant?.name || product.name} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" />
+                ) : (
+                  <span className={`italic font-medium text-[#7D5A44]/60 drop-shadow-sm text-base relative z-0 transform group-hover:scale-105 transition-transform duration-500`}>[Falta Imagen]</span>
+                )}
+                <div className="absolute inset-0 bg-[#4A342A]/0 group-hover:bg-[#4A342A]/10 transition-all duration-300 z-10" />
+                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 w-12 h-12 transform scale-50 group-hover:scale-100 transition-all duration-300 drop-shadow-2xl" />
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div className="min-h-screen bg-[#F5F1EA] font-sans text-[#4A342A] selection:bg-[#7D5A44] selection:text-white scroll-smooth relative">
+              
+              {/* NAVEGACIÓN */}
+              <nav className={`fixed w-full z-40 transition-all duration-300 ${scrolled ? 'bg-[#4A342A] shadow-xl py-2' : 'bg-[#4A342A]/90 py-4 backdrop-blur-sm'}`}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="flex justify-between items-center relative">
+                    
+                    <div className="flex-shrink-0 cursor-pointer" onClick={() => navigateTo('home', 'inicio')}>
+                      <h1 className="text-3xl font-black tracking-tighter transition-colors text-[#F5F1EA]">
+                        INNOVA <span className="text-[#B2967D]">INTERIORES</span>
+                      </h1>
+                    </div>
+                    
+                    <div className="hidden md:flex space-x-6 lg:space-x-8">
+                      {['Inicio', 'Nosotros', 'Catálogo', 'Galería'].map((item) => (
+                        <button 
+                          key={item}
+                          onClick={() => navigateTo('home', item)} 
+                          className={`text-sm font-bold tracking-wider uppercase transition-colors hover:text-[#B2967D] hover:-translate-y-0.5 transform duration-300 ${currentRoute === 'home' ? 'text-[#F5F1EA]' : 'text-[#D7C9B8]'}`}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                      <button 
+                        onClick={() => navigateTo('sucursales')} 
+                        className={`text-sm font-black tracking-wider uppercase transition-all px-4 py-1.5 rounded-full border-2 ${currentRoute === 'sucursales' ? 'bg-[#F5F1EA] text-[#4A342A] border-[#F5F1EA]' : 'border-[#B2967D] text-[#F5F1EA] hover:bg-[#B2967D] hover:text-[#4A342A]'}`}
+                      >
+                        Sucursales
+                      </button>
+                    </div>
+
+                    <div className="md:hidden flex items-center">
+                      <button 
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+                        className="focus:outline-none transition-colors text-[#F5F1EA]"
+                      >
+                        {isMobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {isMobileMenuOpen && (
+                  <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-xl py-4 flex flex-col border-t border-[#D7C9B8]">
+                    {['Inicio', 'Nosotros', 'Catálogo', 'Galería'].map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => navigateTo('home', item)}
+                        className="text-left px-6 py-4 text-lg font-bold text-[#4A342A] hover:bg-[#F5F1EA] hover:text-[#7D5A44] transition-colors border-b border-[#D7C9B8]"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => navigateTo('sucursales')}
+                      className="text-left px-6 py-4 text-lg font-black text-white bg-[#E85524] hover:bg-[#C2451A] transition-colors"
+                    >
+                      Ver Sucursales
+                    </button>
+                  </div>
+                )}
+              </nav>
+
+              {/* CONTENIDO PRINCIPAL DINÁMICO */}
+              {currentRoute === 'home' ? (
+                <main>
+                  <section id="inicio" className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-[#4A342A]">
+                    {heroImages.map((imgUrl, index) => (
+                      <div 
+                        key={index}
+                        className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${index === currentHeroIndex ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`}
+                        style={{ backgroundImage: `url('${imgUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                      />
+                    ))}
+                    <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
+                    
+                    <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16 scroll-anim opacity-0">
+                      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 drop-shadow-2xl">
+                        Espacios que <br className="hidden md:block"/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D7C9B8] to-[#F5F1EA]">Hablan de Ti</span>
+                      </h1>
+                      <p className="mt-4 text-2xl md:text-3xl font-medium text-white max-w-4xl mx-auto drop-shadow-lg mb-10 leading-relaxed">
+                        Expertos en lambrines, placas tipo mármol, plafones y recubrimientos de alta calidad para renovar cualquier ambiente.
+                      </p>
+                      <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <button 
+                          onClick={() => navigateTo('home', 'catalogo')}
+                          className="px-8 py-4 text-lg font-bold rounded-full text-white bg-[#7D5A44] hover:bg-[#4A342A] shadow-xl hover:shadow-[#7D5A44]/40 transition-all transform hover:-translate-y-1 hover:scale-105"
+                        >
+                          Ver Catálogo
+                        </button>
+                        <button 
+                          onClick={() => window.open(createWhatsAppLink(), '_blank')}
+                          className="px-8 py-4 text-lg font-bold rounded-full text-[#4A342A] bg-[#F5F1EA] hover:bg-white shadow-xl transition-all transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center"
+                        >
+                          <MessageCircle className="w-5 h-5 mr-2 text-[#25D366]" /> Asesoría Rápida
+                        </button>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section id="nosotros" className="py-24 bg-[#ECE7DC]">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div className="scroll-anim opacity-0">
+                          <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-3">Sobre Nosotros</h2>
+                          <h3 className="text-4xl font-extrabold text-[#4A342A] mb-6 leading-tight">Transformamos interiores en experiencias visuales</h3>
+                          
+                          <p className="text-xl font-medium text-[#7D5A44] mb-8 leading-relaxed">
+                            En <strong className="text-[#4A342A] font-extrabold">Innova Interiores</strong> nos apasiona el diseño y la funcionalidad. Seleccionamos cuidadosamente los mejores materiales del mercado, desde pisos SPC de alto tráfico hasta placas tipo mármol, para ofrecerte soluciones duraderas y estéticamente insuperables.
+                          </p>
+                          
+                          <ul className="space-y-4">
+                            {['Materiales de vanguardia y alta durabilidad', 'Asesoría personalizada por WhatsApp', 'Precios competitivos directo a cliente final', 'Fácil instalación y mantenimiento'].map((item, i) => (
+                              <li key={i} className="flex items-center text-[#7D5A44] font-bold text-lg hover:translate-x-2 transition-transform duration-300">
+                                <CheckCircle2 className="w-6 h-6 text-[#B2967D] mr-3 flex-shrink-0" /> {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="h-80 md:h-[450px] rounded-3xl bg-[#D7C9B8] overflow-hidden shadow-2xl flex items-center justify-center relative bg-cover bg-center border-4 border-[#F5F1EA] transform hover:scale-105 transition-transform duration-500 scroll-anim opacity-0 delay-200" style={{backgroundImage: "url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80')"}}>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section id="catalogo" className="py-24 bg-[#F5F1EA]">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                      <div className="text-center max-w-3xl mx-auto mb-16 scroll-anim opacity-0">
+                        <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-3">Productos</h2>
+                        <h3 className="text-4xl font-extrabold text-[#4A342A]">Catálogo de Acabados</h3>
+                        <p className="mt-4 text-xl font-medium text-[#7D5A44]">Explora nuestra selección. Toca cualquier imagen para verla en detalle.</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {products.map((product, index) => {
+                          const currentVariantIdx = selectedVariants[product.id] || 0;
+                          const currentSizeIdx = selectedSizes[product.id] || 0;
+                          const activePrice = getActivePrice(product, currentVariantIdx, currentSizeIdx);
+                          
+                          return (
+                            <div key={product.id} className={`bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-[#D7C9B8] flex flex-col group transform hover:-translate-y-2 scroll-anim opacity-0`} style={{animationDelay: `${(index % 3) * 100}ms`}}>
+                              <div className="h-56 w-full relative border-b border-[#F5F1EA]">
+                                {renderProductVisual(product, currentVariantIdx, currentSizeIdx)}
+                              </div>
+
+                              <div className="p-6 flex-1 flex flex-col">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
+                                  <h4 className="text-xl font-extrabold text-[#4A342A] group-hover:text-[#7D5A44] transition-colors">{product.name}</h4>
+                                  <span className="text-sm font-bold text-[#4A342A] bg-[#F5F1EA] px-3 py-1 rounded-full border border-[#D7C9B8] transition-all text-center">
+                                    {activePrice}
+                                  </span>
+                                </div>
+                                
+                                <p className="text-[#7D5A44] text-sm mb-6 flex-1">
+                                  {product.description}
+                                </p>
+
+                                <div className="mb-6 p-3 bg-[#F5F1EA] rounded-xl border border-[#D7C9B8]">
+                                  {product.sizes && (
+                                    <div className="mb-4">
+                                      <p className="text-xs font-bold text-[#7D5A44] uppercase tracking-wider mb-2">{product.sizeLabel || "Tamaño"}:</p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {product.sizes.map((size, idx) => (
+                                          <button
+                                            key={idx}
+                                            onClick={() => handleSizeSelect(product.id, idx)}
+                                            className={`px-3 py-1.5 text-sm font-bold rounded-lg border transition-all duration-200 ${
+                                              currentSizeIdx === idx 
+                                                ? 'bg-[#4A342A] text-[#F5F1EA] border-[#4A342A] shadow-md transform scale-105' 
+                                                : 'bg-white text-[#7D5A44] border-[#D7C9B8] hover:border-[#4A342A] hover:scale-105'
+                                            }`}
+                                          >
+                                            {size.name}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {product.variants && (
+                                    <div>
+                                      <p className="text-xs font-bold text-[#7D5A44] uppercase tracking-wider mb-3">
+                                        {product.variantLabel || "Modelo"}: <span className="text-[#4A342A]">{product.variants[currentVariantIdx].name}</span>
+                                      </p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {product.variants.map((variant, idx) => {
+                                          let currentThumbUrl = variant.thumbUrl;
+                                          if (variant.thumbUrls && variant.thumbUrls.length > 0) {
+                                            currentThumbUrl = variant.thumbUrls[currentSizeIdx || 0];
+                                          }
+
+                                          return (
+                                          <button
+                                            key={idx}
+                                            onClick={() => handleVariantSelect(product.id, idx)}
+                                            title={variant.name}
+                                            className={`w-10 h-10 rounded border transition-all duration-300 bg-cover bg-center bg-[#D7C9B8] flex items-center justify-center ${
+                                              currentVariantIdx === idx 
+                                                ? 'ring-2 ring-offset-2 ring-[#7D5A44] scale-110 shadow-md border-transparent' 
+                                                : 'border-[#D7C9B8] hover:scale-110 opacity-80 hover:opacity-100'
+                                            }`}
+                                            style={{ backgroundImage: currentThumbUrl ? `url(${currentThumbUrl})` : 'none' }}
+                                          >
+                                            {!currentThumbUrl && (
+                                              product.sizes ? <span className="text-[9px] font-bold text-[#4A342A] text-center">{variant.name.substring(0,3)}</span>
+                                              : <span className="text-[10px] font-bold text-[#4A342A]/50">Sin Img</span>
+                                            )}
+                                          </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {!product.variants && !product.sizes && (
+                                    <p className="text-xs font-bold text-[#7D5A44] uppercase tracking-wider text-center py-2">Modelo Único</p>
+                                  )}
+                                </div>
+
+                                <a
+                                  href={createWhatsAppLink(product, currentVariantIdx, currentSizeIdx)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full mt-auto flex items-center justify-center px-4 py-3 rounded-lg text-sm font-bold text-white bg-[#25D366] hover:bg-[#1DA851] shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
+                                >
+                                  <MessageCircle className="w-5 h-5 mr-2" /> Cotizar por WhatsApp
+                                </a>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* SECCIÓN ADICIONALES */}
+                      <div className="text-center max-w-3xl mx-auto mb-16 mt-32 scroll-anim opacity-0">
+                        <h3 className="text-4xl font-extrabold text-[#4A342A]">Adicionales e Instalación</h3>
+                        <p className="mt-4 text-xl font-medium text-[#7D5A44]">Complementos perfectos para un acabado profesional.</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {adicionales.map((product, index) => {
+                          const currentVariantIdx = selectedVariants[product.id] || 0;
+                          const activePrice = getActivePrice(product, currentVariantIdx, 0);
+                          
+                          return (
+                            <div key={product.id} className={`bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-[#D7C9B8] flex flex-col group transform hover:-translate-y-2 scroll-anim opacity-0`} style={{animationDelay: `${(index % 3) * 100}ms`}}>
+                              <div className="h-56 w-full relative border-b border-[#F5F1EA]">
+                                {renderProductVisual(product, currentVariantIdx, 0)}
+                              </div>
+
+                              <div className="p-6 flex-1 flex flex-col">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
+                                  <h4 className="text-xl font-extrabold text-[#4A342A] group-hover:text-[#7D5A44] transition-colors">{product.name}</h4>
+                                  <span className="text-sm font-bold text-[#4A342A] bg-[#F5F1EA] px-3 py-1 rounded-full border border-[#D7C9B8] transition-all text-center">
+                                    {activePrice}
+                                  </span>
+                                </div>
+                                
+                                <p className="text-[#7D5A44] text-sm mb-6 flex-1">
+                                  {product.description}
+                                </p>
+
+                                <div className="mb-6 p-3 bg-[#F5F1EA] rounded-xl border border-[#D7C9B8]">
+                                  {product.variants ? (
+                                    <div>
+                                      <p className="text-xs font-bold text-[#7D5A44] uppercase tracking-wider mb-3">
+                                        {product.variantLabel || "Modelo"}: <span className="text-[#4A342A]">{product.variants[currentVariantIdx].name}</span>
+                                      </p>
+                                      <div className="flex flex-wrap gap-2">
+                                        {product.variants.map((variant, idx) => (
+                                          <button
+                                            key={idx}
+                                            onClick={() => handleVariantSelect(product.id, idx)}
+                                            title={variant.name}
+                                            className={`w-10 h-10 rounded border transition-all duration-300 bg-cover bg-center bg-[#D7C9B8] flex items-center justify-center ${
+                                              currentVariantIdx === idx 
+                                                ? 'ring-2 ring-offset-2 ring-[#7D5A44] scale-110 shadow-md border-transparent' 
+                                                : 'border-[#D7C9B8] hover:scale-110 opacity-80 hover:opacity-100'
+                                            }`}
+                                            style={{ backgroundImage: variant.thumbUrl ? `url(${variant.thumbUrl})` : 'none' }}
+                                          >
+                                            {!variant.thumbUrl && (
+                                              <span className="text-[9px] font-bold text-[#4A342A] text-center">{variant.name.substring(0,3)}</span>
+                                            )}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <p className="text-xs font-bold text-[#7D5A44] uppercase tracking-wider text-center py-2">Modelo Único</p>
+                                  )}
+                                </div>
+
+                                <a
+                                  href={createWhatsAppLink(product, currentVariantIdx, 0)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full mt-auto flex items-center justify-center px-4 py-3 rounded-lg text-sm font-bold text-white bg-[#25D366] hover:bg-[#1DA851] shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
+                                >
+                                  <MessageCircle className="w-5 h-5 mr-2" /> Cotizar
+                                </a>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                    </div>
+                  </section>
+
+                  {/* GALERÍA SECTION */}
+                  <section id="galeria" className="py-24 bg-[#ECE7DC]">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                      <div className="text-center max-w-3xl mx-auto mb-16 scroll-anim opacity-0">
+                        <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-3">Inspiración</h2>
+                        <h3 className="text-4xl font-extrabold text-[#4A342A]">Galería de Trabajos</h3>
+                        <p className="mt-4 text-xl font-medium text-[#7D5A44]">Descubre cómo se ven nuestros lambrines, placas y viguetas ya instalados.</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[
+                          "public/images/galeria/galeria_1.webp",
+                          "public/images/galeria/galeria_2.webp",
+                          "public/images/galeria/galeria_3.webp",
+                          "public/images/galeria/galeria_4.webp",
+                          "public/images/galeria/galeria_5.webp"
+                        ].map((img, i) => (
+                          <div 
+                            key={i} 
+                            onClick={() => openLightbox({ name: "Instalación", imageUrl: img }, 0, 0)}
+                            className="group relative h-72 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 scroll-anim opacity-0 cursor-pointer" 
+                            style={{animationDelay: `${(i % 3) * 100}ms`}}
+                          >
+                            <img src={img} alt={`Instalación ${i+1}`} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                            <div className="absolute inset-0 bg-[#4A342A]/0 group-hover:bg-[#4A342A]/40 transition-colors duration-500 flex items-center justify-center">
+                              <ZoomIn className="text-white opacity-0 group-hover:opacity-100 w-12 h-12 transform scale-50 group-hover:scale-100 transition-all duration-300 drop-shadow-2xl" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
+                </main>
+              ) : (
+                /* PÁGINA DE SUCURSALES (VISTA SEPARADA) */
+                <main className="pt-24 bg-[#F5F1EA] min-h-screen pb-20">
+                  {/* Fila selectora de sucursales */}
+                  <div className="bg-white border-b border-gray-200 shadow-sm scroll-anim opacity-0 mt-4">
+                    <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 p-6">
+                      {sucursalesList.map((sucursal, index) => (
+                        <button 
+                          key={index}
+                          onClick={() => setActiveSucursal(index)}
+                          className={`flex-1 min-w-[140px] flex flex-col items-center justify-center py-6 px-4 rounded-xl transition-all duration-300 ${activeSucursal === index ? 'bg-[#F5F1EA] shadow-inner border border-[#D7C9B8] scale-105' : 'hover:bg-gray-50 border border-transparent'}`}
+                        >
+                          <MapPin className={`w-8 h-8 mb-3 transition-colors ${activeSucursal === index ? 'text-[#E85524]' : 'text-gray-400'}`} />
+                          <h4 className="font-extrabold text-[#4A342A] text-center mb-1">{sucursal.name}</h4>
+                          <p className="text-xs text-gray-500 mb-4 font-medium">Tel. {sucursal.tel}</p>
+                          <span className={`text-[10px] uppercase font-bold py-1.5 px-4 rounded-full transition-colors ${activeSucursal === index ? 'bg-[#4A342A] text-white' : 'bg-gray-200 text-gray-600'}`}>
+                            Ver Detalles
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Vista Detallada de Sucursal */}
+                  <div className="max-w-6xl mx-auto px-4 mt-12 scroll-anim opacity-0 delay-100">
+                    <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-[#D7C9B8]">
+                      
+                      <div className="md:w-1/2 h-72 md:h-auto relative">
+                         <img src={sucursalesList[activeSucursal].img} alt={`Sucursal ${sucursalesList[activeSucursal].name}`} className="w-full h-full object-cover" />
+                         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
+                      </div>
+
+                      <div className="md:w-1/2 p-8 md:p-14 flex flex-col justify-center bg-white relative">
+                        <div className="absolute top-8 right-8 w-16 h-16 opacity-10">
+                          <MapPin className="w-full h-full text-[#E85524]" />
+                        </div>
+                        
+                        <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-2">Sucursal</h2>
+                        <h3 className="text-4xl md:text-5xl font-extrabold text-[#4A342A] mb-8">{sucursalesList[activeSucursal].name}</h3>
+                        
+                        <div className="space-y-6 mb-10">
+                          <div className="flex items-start">
+                            <MapPin className="w-6 h-6 mr-4 text-[#E85524] mt-0.5" />
+                            <div>
+                              <p className="font-bold text-[#4A342A] text-sm mb-1 uppercase tracking-wider">Dirección</p>
+                              <p className="text-gray-600 whitespace-pre-line">{sucursalesList[activeSucursal].address}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start">
+                            <Phone className="w-6 h-6 mr-4 text-[#E85524] mt-0.5" />
+                            <div>
+                              <p className="font-bold text-[#4A342A] text-sm mb-1 uppercase tracking-wider">Llámanos</p>
+                              <p className="text-gray-600">{sucursalesList[activeSucursal].tel}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start">
+                            <Clock className="w-6 h-6 mr-4 text-[#E85524] mt-0.5" />
+                            <div>
+                              <p className="font-bold text-[#4A342A] text-sm mb-1 uppercase tracking-wider">Horario</p>
+                              <p className="text-gray-600 whitespace-pre-line leading-relaxed">{sucursalesList[activeSucursal].schedule}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <a 
+                          href={`https://wa.me/${innovaPhone}?text=Hola,%20busco%20información%20de%20la%20sucursal%20${sucursalesList[activeSucursal].name}.`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center bg-[#4A342A] text-white font-bold py-4 px-10 rounded-full hover:bg-[#E85524] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 self-start"
+                        >
+                          <MessageCircle className="w-5 h-5 mr-3" /> Escríbenos
+                        </a>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </main>
+              )}
+
+              <footer className="bg-[#4A342A] text-[#D7C9B8] py-16 border-t border-[#7D5A44]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 text-center md:text-left">
+                    <div className="md:col-span-2 flex flex-col items-center md:items-start">
+                      <img src="public/images/logo/logo.webp" alt="Innova Interiores" className="h-20 md:h-24 w-auto object-contain mb-6 opacity-90 hover:opacity-100 transition-opacity" />
+                      <p className="text-[#B2967D] max-w-sm mx-auto md:mx-0 text-sm leading-relaxed">
+                        Transformando espacios con materiales de lujo y diseños exclusivos al alcance de tu presupuesto. Expertos en acabados de interiores.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">Navegación</h4>
+                      <ul className="space-y-4 text-sm">
+                        {['Inicio', 'Nosotros', 'Catálogo', 'Galería'].map((item) => (
+                          <li key={item}>
+                            <button onClick={() => navigateTo('home', item)} className="text-[#D7C9B8] hover:text-white transition-colors flex items-center justify-center md:justify-start">
+                              <ChevronRight className="w-4 h-4 mr-1 opacity-50" /> {item}
+                            </button>
+                          </li>
+                        ))}
+                        <li>
+                           <button onClick={() => navigateTo('sucursales')} className="text-[#E85524] font-bold hover:text-white transition-colors flex items-center justify-center md:justify-start">
+                             <ChevronRight className="w-4 h-4 mr-1 opacity-50" /> Sucursales
+                           </button>
+                        </li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-xs">Atención al Cliente</h4>
+                      <ul className="space-y-4 text-sm flex flex-col items-center md:items-start">
+                        <li>
+                          <a href={`https://wa.me/${innovaPhone}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#D7C9B8] hover:text-white transition-colors">
+                            <Phone className="w-5 h-5 mr-3" /> 55 1128 8342
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="flex items-center text-[#D7C9B8] hover:text-white transition-colors">
+                            <Facebook className="w-5 h-5 mr-3" /> Innova Interiores
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-8 border-t border-[#7D5A44] flex flex-col items-center justify-center text-center text-xs">
+                    <p className="text-[#B2967D]">
+                      © {new Date().getFullYear()} Innova Interiores. Todos los derechos reservados.
+                    </p>
+                  </div>
+                </div>
+              </footer>
+
+              {lightboxData && (
+                <div 
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-[#4A342A]/95 backdrop-blur-md p-4 transition-all opacity-100"
+                  onClick={closeLightbox}
+                >
+                  <button 
+                    className="absolute top-6 right-6 z-[60] bg-[#F5F1EA] text-[#4A342A] hover:bg-white hover:scale-110 rounded-full p-3 shadow-2xl transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeLightbox();
+                    }}
+                  >
+                    <X className="w-8 h-8" />
+                  </button>
+                  
+                  <div 
+                    className="max-w-5xl w-full flex flex-col items-center relative z-10 animate-fade-in"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {(() => {
+                      const variant = lightboxData.product?.variants ? lightboxData.product.variants[lightboxData.variantIndex] : null;
+                      const activeImg = variant?.imageUrls 
+                        ? (variant.imageUrls[lightboxData.sizeIndex || 0] || variant.imageUrl)
+                        : (variant?.imageUrl || lightboxData.product?.imageUrl || lightboxData.imageUrl);
+                      
+                      return activeImg ? (
+                        <img 
+                          src={activeImg}
+                          alt={lightboxData.product?.name || "Imagen"}
+                          className="max-w-full max-h-[65vh] object-contain rounded-xl shadow-2xl border-4 border-[#4A342A] bg-white"
+                        />
+                      ) : (
+                        <div className="w-full h-[50vh] md:h-[65vh] rounded-3xl shadow-2xl flex items-center justify-center text-center p-8 relative overflow-hidden bg-white border-4 border-[#4A342A]">
+                          <span className="text-3xl md:text-5xl lg:text-6xl font-black drop-shadow-md text-[#7D5A44]/40">
+                             [Falta Imagen]
+                          </span>
+                        </div>
+                      );
+                    })()}
+                    
+                    <div className="mt-6 text-center max-w-2xl bg-[#4A342A]/95 p-5 rounded-2xl backdrop-blur-sm border border-[#7D5A44] shadow-xl">
+                      <h2 className="text-2xl md:text-3xl font-extrabold text-[#F5F1EA] mb-2">
+                        {lightboxData.product?.id === 8 && lightboxData.product.variants 
+                          ? `Grifo ${lightboxData.product.variants[lightboxData.variantIndex].name}`
+                          : (
+                            <React.Fragment>
+                              {lightboxData.product?.name || lightboxData.name}
+                              {lightboxData.product?.sizes && <span className="text-[#B2967D]"> • {lightboxData.product.sizes[lightboxData.sizeIndex].name}</span>}
+                              {lightboxData.product?.variants && <span className="text-[#B2967D]"> • {lightboxData.product.variants[lightboxData.variantIndex].name}</span>}
+                            </React.Fragment>
+                          )
+                        }
+                      </h2>
+                      {lightboxData.product && (
+                        <p className="text-lg md:text-xl text-[#D7C9B8] font-light">
+                          {getActivePrice(lightboxData.product, lightboxData.variantIndex, lightboxData.sizeIndex)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
