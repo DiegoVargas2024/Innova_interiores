@@ -10,29 +10,10 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeInUp 0.4s ease-out forwards;
-            opacity: 0; 
-        }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-        
-        @keyframes slideLeft {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .animate-slide {
-            display: inline-block;
-            white-space: nowrap;
-            animation: slideLeft 20s linear infinite;
-        }
-
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; opacity: 0; }
         html { scroll-behavior: smooth; }
+        .logo-glow { filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8)); }
     </style>
 </head>
 <body>
@@ -307,11 +288,43 @@
         ];
 
         const sucursalesList = [
-          { name: "Ecatepec", tel: "55 1128 8342", address: "C. 41 11, Villa de Gpe Xal, 55339\nEcatepec de Morelos, Méx.", schedule: "Lunes a Sábado de 9:00 am a 6:00 pm", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
-          { name: "Ciudad Azteca", tel: "Pendiente", address: "Dirección pendiente...", schedule: "Próximamente", img: "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
-          { name: "Actopan", tel: "56 5500 4231", address: "Cam. a La Estancia 26, Canadá Chica, 42603\nActopan, Hgo.", schedule: "Lunes a Viernes:\n9:00 AM - 2:00 PM y 3:00 PM - 5:00 PM\nSábados: 9:00 AM - 2:00 PM", img: "https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
-          { name: "Puebla", tel: "220 469 8849", address: "Av Independencia #24 int B\nSan Juan Tuxco, Texmelucan, Puebla", schedule: "Próximamente", img: "https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" },
-          { name: "Tijuana", tel: "663 109 4894", address: "Tijuana B.C.", schedule: "Lunes a Sábado de 9:00 am a 6:00 pm", img: "public/images/sucursales/tijuana.jpg" }
+          { 
+            name: "Ecatepec", 
+            tel: "55 1128 8342", 
+            address: "C. 41 11, Villa de Gpe Xal, 55339\nEcatepec de Morelos, Méx.", 
+            schedule: "Lunes a Sábado de 9:00 am a 6:00 pm", 
+            img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+          },
+          { 
+            name: "Ciudad Azteca", 
+            tel: "55 8566 6891 / 55 7436 8750", 
+            address: "Ver ubicación en Google Maps",
+            link: "https://maps.app.goo.gl/Y41uXeRat1XJeUYn6?g_st=iw",
+            schedule: "Lunes a Viernes de 8:00 am - 6:00 pm\nSábados de 8:00 am - 3:00 pm\nDomingos 9:00 am - 1:00 pm", 
+            img: "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+          },
+          { 
+            name: "Actopan", 
+            tel: "56 5500 4231", 
+            address: "Cam. a La Estancia 26, Canadá Chica, 42603\nActopan, Hgo.", 
+            schedule: "Lunes a Viernes:\n9:00 AM - 2:00 PM y 3:00 PM - 5:00 PM\nSábados: 9:00 AM - 2:00 PM", 
+            img: "https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+          },
+          { 
+            name: "Puebla", 
+            tel: "220 469 8849", 
+            address: "Av Independencia #24 int B\nSan Juan Tuxco, Texmelucan, Puebla", 
+            schedule: "Lunes a Viernes de 8:00 am - 6:00 pm\nSábados de 8:00 am - 3:00 pm", 
+            img: "https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+          },
+          { 
+            name: "Tijuana", 
+            tel: "Pendiente", 
+            address: "Calle Capulín 1433\nPraderas de la Mesa, Tijuana B.C.", 
+            link: "https://maps.apple.com/?address=Tijuana",
+            schedule: "Próximamente", 
+            img: "public/images/sucursales/tijuana.jpg" 
+          }
         ];
 
         function App() {
@@ -346,6 +359,19 @@
             } else {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+          };
+
+          const handleSucursalClick = (index) => {
+            setActiveSucursal(index);
+            // Pequeño tiempo de espera para asegurar que React actualizó el DOM
+            setTimeout(() => {
+              const el = document.getElementById('detalle-sucursal');
+              if(el) {
+                // Calcula la posición y resta un poco para que la barra de navegación no lo tape
+                const y = el.getBoundingClientRect().top + window.scrollY - 100;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
+            }, 100);
           };
 
           const checkAnimations = () => {
@@ -408,7 +434,7 @@
             
             return (
               <div 
-                className="w-full h-full flex items-center justify-center p-6 text-center transition-all duration-500 relative group cursor-pointer overflow-hidden bg-white"
+                className="w-full h-full flex items-center justify-center p-6 transition-all duration-500 relative group cursor-pointer overflow-hidden bg-white"
                 onClick={() => openLightbox(product, isSelectedVariantIndex || 0, isSelectedSizeIndex || 0)}
               >
                 {activeImageUrl ? (
@@ -432,13 +458,13 @@
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex justify-between items-center relative">
                     
-                    <div className="flex-shrink-0 cursor-pointer" onClick={() => navigateTo('home', 'inicio')}>
-                      <h1 className="text-3xl font-black tracking-tighter transition-colors text-[#F5F1EA]">
+                    <div className="flex-shrink-0 cursor-pointer flex items-center" onClick={() => navigateTo('home', 'inicio')}>
+                      <h1 className="text-2xl md:text-3xl font-black tracking-tighter transition-colors text-[#F5F1EA]">
                         INNOVA <span className="text-[#B2967D]">INTERIORES</span>
                       </h1>
                     </div>
                     
-                    <div className="hidden md:flex space-x-6 lg:space-x-8">
+                    <div className="hidden md:flex space-x-6 lg:space-x-8 items-center">
                       {['Inicio', 'Nosotros', 'Catálogo', 'Galería'].map((item) => (
                         <button 
                           key={item}
@@ -450,7 +476,7 @@
                       ))}
                       <button 
                         onClick={() => navigateTo('sucursales')} 
-                        className={`text-sm font-black tracking-wider uppercase transition-all px-4 py-1.5 rounded-full border-2 ${currentRoute === 'sucursales' ? 'bg-[#F5F1EA] text-[#4A342A] border-[#F5F1EA]' : 'border-[#B2967D] text-[#F5F1EA] hover:bg-[#B2967D] hover:text-[#4A342A]'}`}
+                        className="text-lg font-black tracking-wider uppercase transition-all px-5 py-2 rounded-full text-yellow-400 border-2 border-yellow-400 hover:bg-yellow-400 hover:text-[#4A342A] drop-shadow-md"
                       >
                         Sucursales
                       </button>
@@ -480,7 +506,7 @@
                     ))}
                     <button
                       onClick={() => navigateTo('sucursales')}
-                      className="text-left px-6 py-4 text-lg font-black text-white bg-[#E85524] hover:bg-[#C2451A] transition-colors"
+                      className="text-left px-6 py-4 text-xl font-black text-[#4A342A] bg-yellow-400 hover:bg-yellow-500 transition-colors"
                     >
                       Ver Sucursales
                     </button>
@@ -488,7 +514,6 @@
                 )}
               </nav>
 
-              {/* CONTENIDO PRINCIPAL DINÁMICO */}
               {currentRoute === 'home' ? (
                 <main>
                   <section id="inicio" className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-[#4A342A]">
@@ -502,11 +527,11 @@
                     <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
                     
                     <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16 scroll-anim opacity-0">
-                      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 drop-shadow-2xl">
-                        Espacios que <br className="hidden md:block"/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D7C9B8] to-[#F5F1EA]">Hablan de Ti</span>
+                      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 drop-shadow-2xl text-center">
+                        TRANSFORMAMOS INTERIORES <br className="hidden md:block"/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D7C9B8] to-[#F5F1EA]">Experiencias visuales</span>
                       </h1>
-                      <p className="mt-4 text-2xl md:text-3xl font-medium text-white max-w-4xl mx-auto drop-shadow-lg mb-10 leading-relaxed">
-                        Expertos en lambrines, placas tipo mármol, plafones y recubrimientos de alta calidad para renovar cualquier ambiente.
+                      <p className="mt-4 text-2xl md:text-3xl font-medium text-white max-w-4xl mx-auto drop-shadow-lg mb-10 leading-relaxed text-center">
+                        Espacios que hablan de ti
                       </p>
                       <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button 
@@ -532,7 +557,7 @@
                           <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-3">Sobre Nosotros</h2>
                           <h3 className="text-4xl font-extrabold text-[#4A342A] mb-6 leading-tight">Transformamos interiores en experiencias visuales</h3>
                           
-                          <p className="text-xl font-medium text-[#7D5A44] mb-8 leading-relaxed">
+                          <p className="text-xl font-medium text-[#7D5A44] mb-8 leading-relaxed text-justify">
                             En <strong className="text-[#4A342A] font-extrabold">Innova Interiores</strong> nos apasiona el diseño y la funcionalidad. Seleccionamos cuidadosamente los mejores materiales del mercado, desde pisos SPC de alto tráfico hasta placas tipo mármol, para ofrecerte soluciones duraderas y estéticamente insuperables.
                           </p>
                           
@@ -750,7 +775,8 @@
                           "public/images/galeria/galeria_2.webp",
                           "public/images/galeria/galeria_3.webp",
                           "public/images/galeria/galeria_4.webp",
-                          "public/images/galeria/galeria_5.webp"
+                          "public/images/galeria/galeria_5.webp",
+                          "public/images/galeria/galeria_6.webp"
                         ].map((img, i) => (
                           <div 
                             key={i} 
@@ -777,12 +803,12 @@
                       {sucursalesList.map((sucursal, index) => (
                         <button 
                           key={index}
-                          onClick={() => setActiveSucursal(index)}
+                          onClick={() => handleSucursalClick(index)}
                           className={`flex-1 min-w-[140px] flex flex-col items-center justify-center py-6 px-4 rounded-xl transition-all duration-300 ${activeSucursal === index ? 'bg-[#F5F1EA] shadow-inner border border-[#D7C9B8] scale-105' : 'hover:bg-gray-50 border border-transparent'}`}
                         >
                           <MapPin className={`w-8 h-8 mb-3 transition-colors ${activeSucursal === index ? 'text-[#E85524]' : 'text-gray-400'}`} />
                           <h4 className="font-extrabold text-[#4A342A] text-center mb-1">{sucursal.name}</h4>
-                          <p className="text-xs text-gray-500 mb-4 font-medium">Tel. {sucursal.tel}</p>
+                          <p className="text-xs text-gray-500 mb-4 font-medium">Tel. {sucursal.tel.split('/')[0]}</p>
                           <span className={`text-[10px] uppercase font-bold py-1.5 px-4 rounded-full transition-colors ${activeSucursal === index ? 'bg-[#4A342A] text-white' : 'bg-gray-200 text-gray-600'}`}>
                             Ver Detalles
                           </span>
@@ -792,7 +818,7 @@
                   </div>
 
                   {/* Vista Detallada de Sucursal */}
-                  <div className="max-w-6xl mx-auto px-4 mt-12 scroll-anim opacity-0 delay-100">
+                  <div id="detalle-sucursal" className="max-w-6xl mx-auto px-4 mt-12 scroll-anim opacity-0 delay-100">
                     <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-[#D7C9B8]">
                       
                       <div className="md:w-1/2 h-72 md:h-auto relative">
@@ -813,7 +839,13 @@
                             <MapPin className="w-6 h-6 mr-4 text-[#E85524] mt-0.5" />
                             <div>
                               <p className="font-bold text-[#4A342A] text-sm mb-1 uppercase tracking-wider">Dirección</p>
-                              <p className="text-gray-600 whitespace-pre-line">{sucursalesList[activeSucursal].address}</p>
+                              <p className="text-gray-600 whitespace-pre-line">
+                                {sucursalesList[activeSucursal].link 
+                                  ? <a href={sucursalesList[activeSucursal].link} target="_blank" className="text-[#E85524] underline hover:text-[#4A342A] font-bold">Ver en Google Maps</a> 
+                                  : sucursalesList[activeSucursal].address}
+                                {sucursalesList[activeSucursal].name === "Tijuana" && <br/>}
+                                {sucursalesList[activeSucursal].name === "Tijuana" && sucursalesList[activeSucursal].address}
+                              </p>
                             </div>
                           </div>
                           
@@ -821,7 +853,7 @@
                             <Phone className="w-6 h-6 mr-4 text-[#E85524] mt-0.5" />
                             <div>
                               <p className="font-bold text-[#4A342A] text-sm mb-1 uppercase tracking-wider">Llámanos</p>
-                              <p className="text-gray-600">{sucursalesList[activeSucursal].tel}</p>
+                              <p className="text-gray-600 whitespace-pre-line">{sucursalesList[activeSucursal].tel.replace(' / ', '\n')}</p>
                             </div>
                           </div>
 
@@ -843,7 +875,6 @@
                           <MessageCircle className="w-5 h-5 mr-3" /> Escríbenos
                         </a>
                       </div>
-                      
                     </div>
                   </div>
                 </main>
@@ -853,7 +884,7 @@
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 text-center md:text-left">
                     <div className="md:col-span-2 flex flex-col items-center md:items-start">
-                      <img src="public/images/logo/logo.webp" alt="Innova Interiores" className="h-20 md:h-24 w-auto object-contain mb-6 opacity-90 hover:opacity-100 transition-opacity" />
+                      <img src="public/images/logo/logo.webp" alt="Innova Interiores" className="h-20 md:h-24 w-auto object-contain mb-6 opacity-90 hover:opacity-100 transition-opacity logo-glow" />
                       <p className="text-[#B2967D] max-w-sm mx-auto md:mx-0 text-sm leading-relaxed">
                         Transformando espacios con materiales de lujo y diseños exclusivos al alcance de tu presupuesto. Expertos en acabados de interiores.
                       </p>
@@ -870,7 +901,7 @@
                           </li>
                         ))}
                         <li>
-                           <button onClick={() => navigateTo('sucursales')} className="text-[#E85524] font-bold hover:text-white transition-colors flex items-center justify-center md:justify-start">
+                           <button onClick={() => navigateTo('sucursales')} className="text-yellow-400 font-bold hover:text-yellow-300 transition-colors flex items-center justify-center md:justify-start">
                              <ChevronRight className="w-4 h-4 mr-1 opacity-50" /> Sucursales
                            </button>
                         </li>
@@ -902,6 +933,7 @@
                 </div>
               </footer>
 
+              {/* LIGHTBOX */}
               {lightboxData && (
                 <div 
                   className="fixed inset-0 z-50 flex items-center justify-center bg-[#4A342A]/95 backdrop-blur-md p-4 transition-all opacity-100"
@@ -928,11 +960,13 @@
                         : (variant?.imageUrl || lightboxData.product?.imageUrl || lightboxData.imageUrl);
                       
                       return activeImg ? (
-                        <img 
-                          src={activeImg}
-                          alt={lightboxData.product?.name || "Imagen"}
-                          className="max-w-full max-h-[65vh] object-contain rounded-xl shadow-2xl border-4 border-[#4A342A] bg-white"
-                        />
+                        <div className="bg-white rounded-xl shadow-2xl border-4 border-[#4A342A] p-2">
+                           <img 
+                             src={activeImg}
+                             alt={lightboxData.product?.name || "Imagen"}
+                             className="max-w-full max-h-[55vh] object-contain"
+                           />
+                        </div>
                       ) : (
                         <div className="w-full h-[50vh] md:h-[65vh] rounded-3xl shadow-2xl flex items-center justify-center text-center p-8 relative overflow-hidden bg-white border-4 border-[#4A342A]">
                           <span className="text-3xl md:text-5xl lg:text-6xl font-black drop-shadow-md text-[#7D5A44]/40">
@@ -942,8 +976,9 @@
                       );
                     })()}
                     
-                    <div className="mt-6 text-center max-w-2xl bg-[#4A342A]/95 p-5 rounded-2xl backdrop-blur-sm border border-[#7D5A44] shadow-xl">
-                      <h2 className="text-2xl md:text-3xl font-extrabold text-[#F5F1EA] mb-2">
+                    {/* CUADRO DE INFORMACIÓN ESTILO CAPTURA */}
+                    <div className="mt-4 text-center w-full max-w-lg bg-[#4A342A]/95 p-4 rounded-xl border border-[#7D5A44] shadow-xl">
+                      <h2 className="text-xl md:text-2xl font-extrabold text-[#F5F1EA] mb-1">
                         {lightboxData.product?.id === 8 && lightboxData.product.variants 
                           ? `Grifo ${lightboxData.product.variants[lightboxData.variantIndex].name}`
                           : (
@@ -956,7 +991,7 @@
                         }
                       </h2>
                       {lightboxData.product && (
-                        <p className="text-lg md:text-xl text-[#D7C9B8] font-light">
+                        <p className="text-base md:text-lg text-[#D7C9B8] font-light">
                           {getActivePrice(lightboxData.product, lightboxData.variantIndex, lightboxData.sizeIndex)}
                         </p>
                       )}
