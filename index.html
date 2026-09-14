@@ -38,6 +38,14 @@
 
         const innovaPhone = "525511288342";
 
+        const getBranchPhone = (telString) => {
+            if (!telString || telString.toLowerCase().includes('pendiente')) return innovaPhone;
+            const rawPhone = telString.split('/')[0].replace(/\D/g, '');
+            if (rawPhone.length === 10) return '52' + rawPhone;
+            if (rawPhone.length > 10) return rawPhone;
+            return innovaPhone;
+        };
+
         const heroImages = [
             "public/images/carrucel/carrucel_1.webp",
             "public/images/carrucel/carrucel_2.webp",
@@ -235,6 +243,18 @@
               { name: "Filtrasol", price: "$2200", thumbUrl: "public/images/policarbonato/filtrasol.webp", imageUrl: "public/images/policarbonato/filtrasol.webp" }
             ]
           }
+          /*
+          ,
+          {
+            id: 99,
+            name: "NOMBRE DEL NUEVO PRODUCTO",
+            price: "$000",
+            description: "Descripción de tu nuevo producto. Modifica esto en el código.",
+            variants: [
+              { name: "Variante 1", thumbUrl: "public/images/nuevo/imagen.webp", imageUrl: "public/images/nuevo/imagen.webp" }
+            ]
+          }
+          */
         ];
 
         const adicionales = [
@@ -291,15 +311,15 @@
           { 
             name: "Edo. Mex. Xalostoc", 
             tel: "55 1128 8342", 
-            address: "Ver ubicación en Google Maps",
+            facebook: "https://www.facebook.com/share/1DxVtEgcXH/?mibextid=wwXIfr",
             link: "https://maps.app.goo.gl/ZkLrdkenZqqEkicw7?g_st=iw", 
             schedule: "Lunes a Sábado de 9:00 am a 6:00 pm", 
             img: "public/images/sucursales/xalostoc.webp" 
           },
           { 
-            name: "Edo. Mex. Ciudad Azteca", 
+            name: "Edo. Mex.\nCiudad Azteca", 
             tel: "55 8566 6891 / 55 7436 8750", 
-            address: "Ver ubicación en Google Maps",
+            facebook: "https://www.facebook.com/share/1DxVtEgcXH/?mibextid=wwXIfr",
             link: "https://maps.app.goo.gl/Y41uXeRat1XJeUYn6?g_st=iw",
             schedule: "Lunes a Viernes de 8:00 am - 6:00 pm\nSábados de 8:00 am - 3:00 pm\nDomingos 9:00 am - 1:00 pm", 
             img: "public/images/sucursales/ciudad_azteca.webp" 
@@ -307,7 +327,7 @@
           { 
             name: "Actopan, Hidalgo", 
             tel: "56 5500 4231", 
-            address: "Ver ubicación en Google Maps", 
+            facebook: "https://www.facebook.com/share/1DxVtEgcXH/?mibextid=wwXIfr",
             link: "https://maps.app.goo.gl/8Ezk9PW1BSqheoHQ8?g_st=iw",
             schedule: "Lunes a Viernes:\n9:00 AM - 2:00 PM y 3:00 PM - 5:00 PM\nSábados: 9:00 AM - 2:00 PM", 
             img: "public/images/sucursales/actopan.webp" 
@@ -315,7 +335,7 @@
           { 
             name: "San Martín Texmelucan, Puebla", 
             tel: "220 469 8849", 
-            address: "Ver ubicación en Google Maps", 
+            facebook: "https://www.facebook.com/share/19KmJCE6y5/?mibextid=wwXIfr",
             link: "https://maps.app.goo.gl/Gn3Lt2eQQZhzPkiHA?g_st=iw",
             schedule: "Lunes a Viernes de 8:00 am - 6:00 pm\nSábados de 8:00 am - 3:00 pm", 
             img: "public/images/sucursales/puebla.webp" 
@@ -323,7 +343,7 @@
           { 
             name: "Tijuana", 
             tel: "663 109 4894", 
-            address: "", 
+            facebook: "https://www.facebook.com/share/19SribTxvW/?mibextid=wwXIfr",
             link: "https://maps.apple.com/?address=Tijuana",
             schedule: "Lunes a Domingo de 9:00 am a 5:00 pm", 
             img: "public/images/sucursales/tijuana.webp" 
@@ -366,11 +386,9 @@
 
           const handleSucursalClick = (index) => {
             setActiveSucursal(index);
-            // Pequeño tiempo de espera para asegurar que React actualizó el DOM
             setTimeout(() => {
               const el = document.getElementById('detalle-sucursal');
               if(el) {
-                // Calcula la posición y resta un poco para que la barra de navegación no lo tape
                 const y = el.getBoundingClientRect().top + window.scrollY - 100;
                 window.scrollTo({ top: y, behavior: 'smooth' });
               }
@@ -509,7 +527,7 @@
                     ))}
                     <button
                       onClick={() => navigateTo('sucursales')}
-                      className="text-left px-6 py-4 text-xl font-black text-[#4A342A] bg-yellow-400 hover:bg-yellow-500 transition-colors"
+                      className="text-left px-6 py-4 text-xl font-black text-white bg-[#E85524] hover:bg-[#C2451A] transition-colors"
                     >
                       Ver Sucursales
                     </button>
@@ -536,18 +554,18 @@
                       <p className="mt-4 text-2xl md:text-3xl font-medium text-white max-w-4xl mx-auto drop-shadow-lg mb-10 leading-relaxed text-center">
                         Espacios que hablan de ti
                       </p>
-                      <div className="flex flex-col sm:flex-row justify-center gap-4">
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4">
                         <button 
                           onClick={() => navigateTo('home', 'catalogo')}
-                          className="px-8 py-4 text-lg font-bold rounded-full text-white bg-[#7D5A44] hover:bg-[#4A342A] shadow-xl hover:shadow-[#7D5A44]/40 transition-all transform hover:-translate-y-1 hover:scale-105"
+                          className="px-5 py-2.5 md:px-8 md:py-4 text-sm md:text-lg font-bold rounded-full text-white bg-[#7D5A44] hover:bg-[#4A342A] shadow-xl hover:shadow-[#7D5A44]/40 transition-all transform hover:-translate-y-1 hover:scale-105"
                         >
                           Ver Catálogo
                         </button>
                         <button 
                           onClick={() => window.open(createWhatsAppLink(), '_blank')}
-                          className="px-8 py-4 text-lg font-bold rounded-full text-[#4A342A] bg-[#F5F1EA] hover:bg-white shadow-xl transition-all transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center"
+                          className="px-5 py-2.5 md:px-8 md:py-4 text-sm md:text-lg font-bold rounded-full text-[#4A342A] bg-[#F5F1EA] hover:bg-white shadow-xl transition-all transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center"
                         >
-                          <MessageCircle className="w-5 h-5 mr-2 text-[#25D366]" /> Asesoría Rápida
+                          <MessageCircle className="w-4 h-4 md:w-5 md:h-5 mr-2 text-[#25D366]" /> Asesoría Rápida
                         </button>
                       </div>
                     </div>
@@ -584,6 +602,12 @@
                         <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-3">Productos</h2>
                         <h3 className="text-4xl font-extrabold text-[#4A342A]">Catálogo de Acabados</h3>
                         <p className="mt-4 text-xl font-medium text-[#7D5A44]">Explora nuestra selección. Toca cualquier imagen para verla en detalle.</p>
+                        
+                        <div className="mt-6 inline-block bg-white/60 backdrop-blur-sm border border-[#D7C9B8] px-6 py-3 rounded-xl shadow-sm">
+                          <p className="text-sm font-bold text-[#E85524]">
+                            * Nota: Los precios mostrados aplican para la sucursal de Xalostoc. El costo puede variar dependiendo de la sucursal.
+                          </p>
+                        </div>
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -774,20 +798,20 @@
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[
-                          "public/images/galeria/galeria_1.webp",
-                          "public/images/galeria/galeria_2.webp",
-                          "public/images/galeria/galeria_3.webp",
-                          "public/images/galeria/galeria_4.webp",
-                          "public/images/galeria/galeria_5.webp",
-                          "public/images/galeria/galeria_6.webp"
-                        ].map((img, i) => (
+                          { src: "public/images/galeria/galeria_1.webp", desc: "Placa lisboa, Lambrin clásico gris claro, Molduras cromadas doradas, Tiras de luz led blancas, Esquinero gris claro" },
+                          { src: "public/images/galeria/galeria_2.webp", desc: "Plafón nogal, Policarbonato sólido transparente" },
+                          { src: "public/images/galeria/galeria_3.webp", desc: "Vigueta de 10 cm, Mecanismo de vigueta 10x5" },
+                          { src: "public/images/galeria/galeria_4.webp", desc: "Lambrin clásico nogal oscuro, Placa black aqua, Unión de placa negra, Tira de luz led blanca" },
+                          { src: "public/images/galeria/galeria_5.webp", desc: "Lambrin negro" },
+                          { src: "public/images/galeria/galeria_6.webp", desc: "Lambrin rosa, Placa QUARTZ ROSE, Lámpara decorativa circular luz blanca" }
+                        ].map((item, i) => (
                           <div 
                             key={i} 
-                            onClick={() => openLightbox({ name: "Instalación", imageUrl: img }, 0, 0)}
+                            onClick={() => setLightboxData({ isGallery: true, name: item.desc, imageUrl: item.src })}
                             className="group relative h-72 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 scroll-anim opacity-0 cursor-pointer" 
                             style={{animationDelay: `${(i % 3) * 100}ms`}}
                           >
-                            <img src={img} alt={`Instalación ${i+1}`} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                            <img src={item.src} alt={`Instalación ${i+1}`} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                             <div className="absolute inset-0 bg-[#4A342A]/0 group-hover:bg-[#4A342A]/40 transition-colors duration-500 flex items-center justify-center">
                               <ZoomIn className="text-white opacity-0 group-hover:opacity-100 w-12 h-12 transform scale-50 group-hover:scale-100 transition-all duration-300 drop-shadow-2xl" />
                             </div>
@@ -810,7 +834,7 @@
                           className={`flex-1 min-w-[140px] flex flex-col items-center justify-center py-6 px-4 rounded-xl transition-all duration-300 ${activeSucursal === index ? 'bg-[#F5F1EA] shadow-inner border border-[#D7C9B8] scale-105' : 'hover:bg-gray-50 border border-transparent'}`}
                         >
                           <MapPin className={`w-8 h-8 mb-3 transition-colors ${activeSucursal === index ? 'text-[#E85524]' : 'text-gray-400'}`} />
-                          <h4 className="font-extrabold text-[#4A342A] text-center mb-1">{sucursal.name}</h4>
+                          <h4 className="font-extrabold text-[#4A342A] text-center mb-1 whitespace-pre-line">{sucursal.name}</h4>
                           <p className="text-xs text-gray-500 mb-4 font-medium">Tel. {sucursal.tel.split('/')[0]}</p>
                           <span className={`text-[10px] uppercase font-bold py-1.5 px-4 rounded-full transition-colors ${activeSucursal === index ? 'bg-[#4A342A] text-white' : 'bg-gray-200 text-gray-600'}`}>
                             Ver Detalles
@@ -825,7 +849,7 @@
                     <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-[#D7C9B8]">
                       
                       <div className="md:w-1/2 h-72 md:h-auto relative">
-                         <img src={sucursalesList[activeSucursal].img} alt={`Sucursal ${sucursalesList[activeSucursal].name}`} className="w-full h-full object-cover" />
+                         <img src={sucursalesList[activeSucursal].img} alt={`Sucursal ${sucursalesList[activeSucursal].name.replace('\n', ' ')}`} className="w-full h-full object-cover" />
                          <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
                       </div>
 
@@ -835,19 +859,19 @@
                         </div>
                         
                         <h2 className="text-sm font-black tracking-widest text-[#B2967D] uppercase mb-2">Sucursal</h2>
-                        <h3 className="text-4xl md:text-5xl font-extrabold text-[#4A342A] mb-8">{sucursalesList[activeSucursal].name}</h3>
+                        <h3 className="text-4xl md:text-5xl font-extrabold text-[#4A342A] mb-8 whitespace-pre-line">{sucursalesList[activeSucursal].name}</h3>
                         
                         <div className="space-y-6 mb-10">
                           <div className="flex items-start">
                             <MapPin className="w-6 h-6 mr-4 text-[#E85524] mt-0.5" />
                             <div>
                               <p className="font-bold text-[#4A342A] text-sm mb-1 uppercase tracking-wider">Dirección</p>
-                              <p className="text-gray-600 whitespace-pre-line">
-                                {sucursalesList[activeSucursal].link 
-                                  ? <a href={sucursalesList[activeSucursal].link} target="_blank" className="text-[#E85524] underline hover:text-[#4A342A] font-bold">Ver en Google Maps</a> 
-                                  : sucursalesList[activeSucursal].address}
-                                {sucursalesList[activeSucursal].name === "Tijuana" && <br/>}
-                                {sucursalesList[activeSucursal].name === "Tijuana" && sucursalesList[activeSucursal].address}
+                              <p className="text-gray-600 whitespace-pre-line mt-1">
+                                {sucursalesList[activeSucursal].link ? (
+                                  <a href={sucursalesList[activeSucursal].link} target="_blank" className="text-[#E85524] underline font-bold text-base decoration-2 underline-offset-2 hover:text-[#C2451A] transition-colors">Ver en Google Maps</a> 
+                                ) : (
+                                  <span className="text-gray-600">Dirección no disponible</span>
+                                )}
                               </p>
                             </div>
                           </div>
@@ -869,14 +893,28 @@
                           </div>
                         </div>
 
-                        <a 
-                          href={`https://wa.me/${innovaPhone}?text=Hola,%20busco%20información%20de%20la%20sucursal%20${sucursalesList[activeSucursal].name}.`} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center bg-[#4A342A] text-white font-bold py-4 px-10 rounded-full hover:bg-[#E85524] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 self-start"
-                        >
-                          <MessageCircle className="w-5 h-5 mr-3" /> Escríbenos
-                        </a>
+                        {/* BOTONES DE REDES SOCIALES Y CONTACTO */}
+                        <div className="flex flex-col gap-4 self-start w-full sm:w-auto">
+                          {sucursalesList[activeSucursal].facebook && (
+                            <a 
+                              href={sucursalesList[activeSucursal].facebook}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center bg-[#1877F2] text-white font-bold py-4 px-10 rounded-full hover:bg-[#166FE5] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 w-full"
+                            >
+                              <Facebook className="w-5 h-5 mr-3" /> Facebook
+                            </a>
+                          )}
+                          <a 
+                            href={`https://wa.me/${getBranchPhone(sucursalesList[activeSucursal].tel)}?text=${encodeURIComponent(`Hola, busco información de la sucursal ${sucursalesList[activeSucursal].name.replace('\n', ' ')}.`)}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center bg-[#4A342A] text-white font-bold py-4 px-10 rounded-full hover:bg-[#E85524] transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 w-full"
+                          >
+                            <MessageCircle className="w-5 h-5 mr-3" /> Escríbenos
+                          </a>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -979,25 +1017,38 @@
                       );
                     })()}
                     
-                    {/* CUADRO DE INFORMACIÓN ESTILO CAPTURA */}
-                    <div className="mt-4 text-center w-full max-w-lg bg-[#4A342A]/95 p-4 rounded-xl border border-[#7D5A44] shadow-xl">
-                      <h2 className="text-xl md:text-2xl font-extrabold text-[#F5F1EA] mb-1">
-                        {lightboxData.product?.id === 8 && lightboxData.product.variants 
-                          ? `Grifo ${lightboxData.product.variants[lightboxData.variantIndex].name}`
-                          : (
-                            <React.Fragment>
-                              {lightboxData.product?.name || lightboxData.name}
-                              {lightboxData.product?.sizes && <span className="text-[#B2967D]"> • {lightboxData.product.sizes[lightboxData.sizeIndex].name}</span>}
-                              {lightboxData.product?.variants && <span className="text-[#B2967D]"> • {lightboxData.product.variants[lightboxData.variantIndex].name}</span>}
-                            </React.Fragment>
-                          )
-                        }
-                      </h2>
-                      {lightboxData.product && (
-                        <p className="text-base md:text-lg text-[#D7C9B8] font-light">
-                          {getActivePrice(lightboxData.product, lightboxData.variantIndex, lightboxData.sizeIndex)}
-                        </p>
-                      )}
+                    {/* CUADRO DE INFORMACIÓN */}
+                    <div className="mt-4 text-center w-full max-w-2xl bg-[#4A342A]/95 p-5 md:p-6 rounded-2xl border border-[#7D5A44] shadow-xl">
+                      {lightboxData.isGallery ? (
+                        <div className="w-full">
+                          <p className="text-[#B2967D] text-xs font-bold uppercase tracking-widest mb-3">Materiales Instalados</p>
+                          <div className="flex flex-wrap justify-center gap-2">
+                            {lightboxData.name.split(',').map((item, idx) => (
+                              <span key={idx} className="bg-white/10 text-[#F5F1EA] px-4 py-2 rounded-full text-sm font-bold border border-[#B2967D]/50 shadow-sm capitalize hover:bg-[#B2967D]/20 transition-colors">
+                                {item.trim()}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : lightboxData.product ? (
+                        <React.Fragment>
+                          <h2 className="text-lg md:text-xl font-extrabold text-[#F5F1EA] leading-relaxed tracking-wide">
+                            {lightboxData.product.id === 8 && lightboxData.product.variants 
+                              ? `Grifo ${lightboxData.product.variants[lightboxData.variantIndex].name}`
+                              : (
+                                <React.Fragment>
+                                  {lightboxData.product.name}
+                                  {lightboxData.product.sizes && <span className="text-[#B2967D]"> • {lightboxData.product.sizes[lightboxData.sizeIndex].name}</span>}
+                                  {lightboxData.product.variants && <span className="text-[#B2967D]"> • {lightboxData.product.variants[lightboxData.variantIndex].name}</span>}
+                                </React.Fragment>
+                              )
+                            }
+                          </h2>
+                          <p className="text-base md:text-lg text-[#D7C9B8] font-light mt-1">
+                            {getActivePrice(lightboxData.product, lightboxData.variantIndex, lightboxData.sizeIndex)}
+                          </p>
+                        </React.Fragment>
+                      ) : null}
                     </div>
                   </div>
                 </div>
